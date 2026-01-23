@@ -1,0 +1,127 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+  background: white;
+  color: #111;
+}
+
+/* Important for Locomotive */
+main {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 80px 24px;
+}
+
+/* Header */
+.header {
+  margin-bottom: 120px;   /* space between header and work list */
+}
+
+/* Name */
+.header h1 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+}
+
+/* Links */
+.links {
+  display: flex;
+  gap: 18px;           /* horizontal spacing between links */
+  margin-bottom: 32px; /* vertical spacing between links and info paragraph */
+}
+
+.links a {
+  text-decoration: none;
+  color: #555;         /* medium gray for subtle links */
+  font-size: 0.9rem;
+}
+
+.links a:hover {
+  color: #111;         /* darker on hover */
+}
+
+.links a {
+  position: relative;         /* required for pseudo-element positioning */
+  text-decoration: none;
+  color: #555;
+  font-size: 0.9rem;
+  padding-bottom: 2px;        /* small padding so underline doesn’t overlap text */
+  transition: color 0.3s ease;
+}
+
+/* Create the underline using ::after */
+.links a::after {
+  content: "";                 /* required for pseudo-element */
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;                 /* thickness of the line */
+  width: 0%;                   /* initial hidden state */
+  background-color: #111;      /* black line */
+  transition: width 0.3s ease; /* animate width on hover */
+}
+
+/* On hover, expand the line from left to right */
+.links a:hover::after {
+  width: 100%;
+}
+
+/* Optional: slightly darken the text on hover */
+.links a:hover {
+  color: #111;
+}
+
+
+/* Info / About line */
+.info {
+  margin-top: 0;       /* we already spaced via links margin-bottom */
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #777;         /* low-contrast gray, distinct but subtle */
+}
+
+/*project html*/
+.project-title {
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.project-year {
+  color: #888;
+  font-size: 0.9rem;
+  margin-top: 2px;
+}
+
+.project-desc{
+    margin-top: 6px;
+    color: 555;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+/* List */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.entry {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+}
+
+.entry span:last-child {
+  color: #888;
+  font-size: 0.9rem;
+}
