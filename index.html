@@ -1,65 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Anish Saha</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Anish Saha</title>
 
-  <!-- Locomotive Scroll CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.css" />
-  <link rel="stylesheet" href="style.css" />
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script src="three-bg.js"></script>
+
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- Scroll Container -->
-  <main data-scroll-container>
 
-    <!-- Header -->
-    <div class="header" data-scroll data-scroll-speed="1">
-      <h1>Anish Saha</h1>
+<!-- Three.js background layer -->
+<canvas id="bg"></canvas>
 
-      <div class="links">
-        <a href="projects.html">projects</a>
-        <a href="https://github.com/" target="_blank">github</a>
-        <a href="https://linkedin.com/" target="_blank">linkedin</a>
-        <a href="mailto:anish@example.com">email</a>
-      </div>
 
-      <p class = 'info'>
-        acsaha[at]andrew.cmu.edu
-      </p>
-    </div>
+<main>
 
-    <!-- Work -->
-    <div id="work" class="list">
 
-      <div class="entry" data-scroll data-scroll-speed="0.5">
-        <span>ev adoption prediction</span>
-        <span>2024</span>
-      </div>
+<div class="header">
+<h1>Anish Saha</h1>
 
-      <div class="entry" data-scroll data-scroll-speed="0.3">
-        <span>breast cancer classification</span>
-        <span>2024</span>
-      </div>
 
-      <div class="entry" data-scroll data-scroll-speed="0.2">
-        <span>charging station deployment</span>
-        <span>2024</span>
-      </div>
+<div class="links">
+<a href="projects.html">projects</a>
+<a href="https://github.com/" target="_blank">github</a>
+<a href="https://linkedin.com/" target="_blank">linkedin</a>
+<a href="mailto:acsaha@andrew.cmu.edu">email</a>
+</div>
 
-      <div class="entry" data-scroll data-scroll-speed="0.1">
-        <span>alzheimers replication</span>
-        <span>2023</span>
-      </div>
 
-    </div>
+<p class="info">
+acsaha[at]andrew.cmu.edu
+</p>
+</div>
 
-  </main>
 
-  <!-- Locomotive Scroll JS -->
-  <script src="https://unpkg.com/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js"></script>
-  <script src="script.js"></script>
+<div class="list">
+<div class="entry">
+<span>ev adoption prediction</span>
+<span>2024</span>
+</div>
+<div class="entry">
+<span>breast cancer classification</span>
+<span>2024</span>
+</div>
+<div class="entry">
+<span>charging station deployment</span>
+<span>2024</span>
+</div>
+<div class="entry">
+<span>alzheimers replication</span>
+<span>2023</span>
+</div>
+</div>
+
+
+</main>
+
+
+<!-- Three.js -->
+<script src="https://unpkg.com/three@0.161.0/build/three.min.js"></script>
+<script src="three-bg.js"></script>
+
 
 </body>
 </html>

@@ -1,84 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Projects – Anish Saha</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Projects – Anish Saha</title>
 
-  <!-- Locomotive Scroll CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.css" />
-  <link rel="stylesheet" href="style.css" />
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script src="three-bg.js"></script>
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <main data-scroll-container>
 
-    <!-- Header for projects page -->
-    <div class="header" data-scroll data-scroll-speed="1">
-      <h1>Projects</h1>
+<canvas id="bg"></canvas>
 
-      <div class="links">
-        <a href="index.html">home</a>
-        <a href="https://github.com/" target="_blank">github</a>
-        <a href="https://linkedin.com/" target="_blank">linkedin</a>
-        <a href="mailto:anish@example.com">email</a>
-      </div>
 
-      <p class="info">
-        selected projects
-      </p>
-    </div>
+<main>
 
-    <!-- Project entries -->
-    <div class="list">
 
-      <div class="entry" data-scroll data-scroll-speed="0.5">
-        <div class="project-title">EV Adoption Prediction</div>
-        <div class="project-year">2024</div>
-        <div class="project-desc">
-          Built ML models to predict electric vehicle adoption at the county level using socioeconomic factors.
-        </div>
-      </div>
+<div class="header">
+<h1>Projects</h1>
 
-      <div class="entry" data-scroll data-scroll-speed="0.4">
-        <div class="project-title">Breast Cancer Classification</div>
-        <div class="project-year">2024</div>
-        <div class="project-desc">
-          Developed a logistic regression model to classify breast cancer cells using Python and Scikit-learn.
-        </div>
-      </div>
 
-      <div class="entry" data-scroll data-scroll-speed="0.3">
-        <div class="project-title">Charging Station Deployment</div>
-        <div class="project-year">2024</div>
-        <div class="project-desc">
-          Proposed optimal locations for EV charging stations in Florida based on model predictions and accessibility data.
-        </div>
-      </div>
+<div class="links">
+<a href="index.html">home</a>
+<a href="https://github.com/" target="_blank">github</a>
+<a href="https://linkedin.com/" target="_blank">linkedin</a>
+<a href="mailto:acsaha@andrew.cmu.edu">email</a>
+</div>
 
-      <div class="entry" data-scroll data-scroll-speed="0.2">
-        <div class="project-title">Alzheimer’s Replication Study</div>
-        <div class="project-year">2023</div>
-        <div class="project-desc">
-          Prepared methods and data for replicating an Alzheimer’s study using mouse models and neural imaging techniques.
-        </div>
-      </div>
 
-    </div>
+<p class="info">selected projects</p>
+</div>
 
-  </main>
 
-  <!-- Locomotive Scroll JS -->
-  <script src="https://unpkg.com/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js"></script>
-  <script>
-    const scroll = new LocomotiveScroll({
-      el: document.querySelector("[data-scroll-container]"),
-      smooth: true,
-      multiplier: 1,
-      smartphone: { smooth: true },
-      tablet: { smooth: true }
-    });
-  </script>
+<div class="list">
 
-</body>
+
+<div class="entry">
+<div class="project-title">EV Adoption Prediction</div>
+<div class="project-year">2024</div>
+<div class="project-desc">
+Built ML models to predict electric vehicle adoption at the county level using socioeconomic factors.
+</div>
+</div>
+
+
+<div class="entry">
+<div class="project-title">Breast Cancer Classification</div>
+<div class="project-year">2024</div>
+<div class="project-desc">
+Developed a logistic regression model to classify breast cancer cells using Python and Scikit-learn.
+</div>
+</div>
+
+
+<div class="entry">
+<div class="project-title">Charging Station Deployment</div>
+<div class="project-year">2024</div>
+<div class="project-desc">
+Proposed optimal locations for EV charging stations in Florida based on model predictions and accessibility data.
+</div>
+</div>
+
+
+<div class="entry">
+<div class="project-title">Alzheimer’s Replication Study</div>
+<div class="project-year">2023</div>
+<div class="project-desc">
 </html>
