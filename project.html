@@ -312,10 +312,10 @@ main {
 <h1>Projects</h1>
 
 <div class="links">
-<a href="index.html">home</a>
-<a href="experience.html">experience</a>
-<a href="https://github.com/" target="_blank">github</a>
-<a href="https://linkedin.com/" target="_blank">linkedin</a>
+<a href="index.html" data-cursor="home">home</a>
+<a href="experience.html" data-cursor="view">experience</a>
+<a href="https://github.com/" target="_blank" data-cursor="visit">github</a>
+<a href="https://linkedin.com/" target="_blank" data-cursor="visit">linkedin</a>
 </div>
 
 <p class="info">selected machine learning & data science projects</p>
@@ -435,8 +435,136 @@ Created a classifier with a CNN able to recognize differences between normal and
 
 <!-- Three.js scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="three-bg.js"></script>
 <script>
+// Three.js Background
+const canvas = document.getElementById("bg");
+
+if (canvas) {
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.z = 60;
+
+  const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+
+  const shapes = [];
+
+  function addShape(geometry, opacityBase = 0.12) {
+    const material = new THREE.MeshBasicMaterial({
+      color: 0x000000,
+      wireframe: true,
+      transparent: true,
+      opacity: opacityBase + Math.random() * 0.08
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+    
+    mesh.position.set(
+      Math.random() * 160 - 80,
+      Math.random() * 120 - 60,
+      Math.random() * 100 - 70
+    );
+    
+    mesh.rotation.x = Math.random() * Math.PI * 2;
+    mesh.rotation.y = Math.random() * Math.PI * 2;
+    mesh.rotation.z = Math.random() * Math.PI * 2;
+    
+    scene.add(mesh);
+    shapes.push({ 
+      mesh, 
+      speedX: (Math.random() - 0.5) * 0.003, 
+      speedY: (Math.random() - 0.5) * 0.002,
+      speedZ: (Math.random() - 0.5) * 0.0015
+    });
+  }
+
+  const shapeTypes = [
+    () => new THREE.BoxGeometry(6 + Math.random() * 6, 6 + Math.random() * 6, 6 + Math.random() * 6),
+    () => new THREE.SphereGeometry(4 + Math.random() * 4, 16, 16),
+    () => new THREE.ConeGeometry(4 + Math.random() * 3, 8 + Math.random() * 6, 16),
+    () => new THREE.CylinderGeometry(3 + Math.random() * 3, 3 + Math.random() * 3, 10 + Math.random() * 6, 16),
+    () => new THREE.TetrahedronGeometry(5 + Math.random() * 6),
+    () => new THREE.OctahedronGeometry(5 + Math.random() * 6),
+    () => new THREE.DodecahedronGeometry(5 + Math.random() * 6),
+    () => new THREE.IcosahedronGeometry(5 + Math.random() * 6),
+    () => new THREE.TorusGeometry(5 + Math.random() * 6, 1.5, 16, 32),
+    () => new THREE.TorusKnotGeometry(4 + Math.random() * 5, 1, 100, 16)
+  ];
+
+  const numShapeTypes = 3 + Math.floor(Math.random() * 2);
+  const selectedShapeIndices = [];
+  
+  while (selectedShapeIndices.length < numShapeTypes) {
+    const randomIndex = Math.floor(Math.random() * shapeTypes.length);
+    if (!selectedShapeIndices.includes(randomIndex)) {
+      selectedShapeIndices.push(randomIndex);
+    }
+  }
+
+  selectedShapeIndices.forEach(index => {
+    const numInstances = 3 + Math.floor(Math.random() * 3);
+    for (let i = 0; i < numInstances; i++) {
+      const geometry = shapeTypes[index]();
+      addShape(geometry, index === 9 ? 0.1 : 0.12);
+    }
+  });
+
+  const particleGeometry = new THREE.BufferGeometry();
+  const particleCount = 2500;
+  const positions = new Float32Array(particleCount * 3);
+
+  for (let i = 0; i < particleCount * 3; i++) {
+    positions[i] = (Math.random() - 0.5) * 220;
+  }
+
+  particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+  const particleMaterial = new THREE.PointsMaterial({
+    color: 0x000000,
+    size: 0.15,
+    transparent: true,
+    opacity: 0.2
+  });
+
+  const particles = new THREE.Points(particleGeometry, particleMaterial);
+  scene.add(particles);
+
+  let mouseX = 0;
+  let mouseY = 0;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+    mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+
+    shapes.forEach(({ mesh, speedX, speedY, speedZ }) => {
+      mesh.rotation.x += speedX;
+      mesh.rotation.y += speedY;
+      mesh.rotation.z += speedZ;
+    });
+
+    particles.rotation.y += 0.0003;
+    particles.rotation.x += 0.00015;
+
+    // Parallax effect
+    camera.position.x += (mouseX * 5 - camera.position.x) * 0.05;
+    camera.position.y += (mouseY * 5 - camera.position.y) * 0.05;
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
+  window.addEventListener("resize", () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+}
+
 // Custom Cursor with Magnetic Effect
 const cursor = document.querySelector('.cursor');
 const cursorText = document.querySelector('.cursor-text');

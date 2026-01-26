@@ -461,22 +461,26 @@ function animateCursor() {
 
 animateCursor();
 
-// Magnetic effect on links
+// Magnetic effect on links (excluding nav links)
 const links = document.querySelectorAll('a');
 
 links.forEach(link => {
-  link.addEventListener('mouseenter', (e) => {
-    cursor.classList.add('hover');
-    const text = link.getAttribute('data-cursor');
-    if (text) {
-      cursorText.textContent = text;
-    }
-  });
+  const isNavLink = link.closest('.links');
   
-  link.addEventListener('mouseleave', () => {
-    cursor.classList.remove('hover');
-    cursorText.textContent = '';
-  });
+  if (!isNavLink) {
+    link.addEventListener('mouseenter', (e) => {
+      cursor.classList.add('hover');
+      const text = link.getAttribute('data-cursor');
+      if (text) {
+        cursorText.textContent = text;
+      }
+    });
+    
+    link.addEventListener('mouseleave', () => {
+      cursor.classList.remove('hover');
+      cursorText.textContent = '';
+    });
+  }
   
   link.addEventListener('mousemove', (e) => {
     const rect = link.getBoundingClientRect();
