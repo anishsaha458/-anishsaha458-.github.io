@@ -20,7 +20,7 @@
   height: 100%;
   z-index: -1;
   pointer-events: none;
-  opacity: 0.35;
+  opacity: 0.5;
 }
 
 html {
@@ -350,7 +350,7 @@ BSc Computer Science
 <!-- Three.js scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// Three.js Background
+// Three.js Background with Color Cycling
 const canvas = document.getElementById("bg");
 
 if (canvas) {
@@ -366,7 +366,7 @@ if (canvas) {
 
   function addShape(geometry, opacityBase = 0.12) {
     const material = new THREE.MeshBasicMaterial({
-      color: 0x000000,
+      color: 0xffffff,
       wireframe: true,
       transparent: true,
       opacity: opacityBase + Math.random() * 0.08
@@ -388,7 +388,8 @@ if (canvas) {
       mesh, 
       speedX: (Math.random() - 0.5) * 0.003, 
       speedY: (Math.random() - 0.5) * 0.002,
-      speedZ: (Math.random() - 0.5) * 0.0015
+      speedZ: (Math.random() - 0.5) * 0.0015,
+      hueOffset: Math.random() * 360
     });
   }
 
@@ -426,18 +427,29 @@ if (canvas) {
   const particleGeometry = new THREE.BufferGeometry();
   const particleCount = 2500;
   const positions = new Float32Array(particleCount * 3);
+  const particleColors = new Float32Array(particleCount * 3);
+  const particleHueOffsets = [];
 
-  for (let i = 0; i < particleCount * 3; i++) {
-    positions[i] = (Math.random() - 0.5) * 220;
+  for (let i = 0; i < particleCount; i++) {
+    positions[i * 3] = (Math.random() - 0.5) * 220;
+    positions[i * 3 + 1] = (Math.random() - 0.5) * 220;
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 220;
+    
+    particleHueOffsets.push(Math.random() * 360);
+    
+    particleColors[i * 3] = 1;
+    particleColors[i * 3 + 1] = 1;
+    particleColors[i * 3 + 2] = 1;
   }
 
   particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  particleGeometry.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
 
   const particleMaterial = new THREE.PointsMaterial({
-    color: 0x000000,
     size: 0.15,
     transparent: true,
-    opacity: 0.2
+    opacity: 0.2,
+    vertexColors: true
   });
 
   const particles = new THREE.Points(particleGeometry, particleMaterial);
@@ -451,14 +463,35 @@ if (canvas) {
     mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
   });
 
+  let time = 0;
+
   function animate() {
     requestAnimationFrame(animate);
 
-    shapes.forEach(({ mesh, speedX, speedY, speedZ }) => {
+    time += 0.0005;
+
+    shapes.forEach(({ mesh, speedX, speedY, speedZ, hueOffset }) => {
       mesh.rotation.x += speedX;
       mesh.rotation.y += speedY;
       mesh.rotation.z += speedZ;
+      
+      const hue = (time * 50 + hueOffset) % 360;
+      const color = new THREE.Color();
+      color.setHSL(hue / 360, 0.85, 0.65);
+      mesh.material.color = color;
     });
+
+    const colors = particleGeometry.attributes.color.array;
+    for (let i = 0; i < particleCount; i++) {
+      const hue = (time * 50 + particleHueOffsets[i]) % 360;
+      const color = new THREE.Color();
+      color.setHSL(hue / 360, 0.85, 0.65);
+      
+      colors[i * 3] = color.r;
+      colors[i * 3 + 1] = color.g;
+      colors[i * 3 + 2] = color.b;
+    }
+    particleGeometry.attributes.color.needsUpdate = true;
 
     particles.rotation.y += 0.0003;
     particles.rotation.x += 0.00015;
