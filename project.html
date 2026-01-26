@@ -9,6 +9,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  cursor: none;
 }
 
 #bg {
@@ -31,6 +32,44 @@ body {
   background: white;
   color: #111;
   overflow-x: hidden;
+}
+
+/* Custom Cursor */
+.cursor {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #111;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
+  mix-blend-mode: difference;
+}
+
+.cursor.hover {
+  width: 60px;
+  height: 60px;
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.cursor-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.cursor.hover .cursor-text {
+  opacity: 1;
 }
 
 main {
@@ -78,6 +117,7 @@ main {
   font-size: 0.9rem;
   padding-bottom: 2px;
   transition: color 0.3s ease;
+  display: inline-block;
 }
 
 .links a::after {
@@ -193,29 +233,6 @@ main {
   margin-bottom: 12px;
 }
 
-/* Bullet Points */
-.project-bullets {
-  list-style: none;
-  margin-top: 12px;
-}
-
-.project-bullets li {
-  color: #666;
-  font-size: 0.9rem;
-  line-height: 1.6;
-  padding-left: 20px;
-  position: relative;
-  margin-bottom: 8px;
-}
-
-.project-bullets li::before {
-  content: "→";
-  position: absolute;
-  left: 0;
-  color: #999;
-  font-weight: 300;
-}
-
 /* Tech Stack Tags */
 .tech-stack {
   display: flex;
@@ -251,6 +268,14 @@ main {
 
 /* Responsive */
 @media (max-width: 768px) {
+  * {
+    cursor: auto;
+  }
+  
+  .cursor {
+    display: none;
+  }
+  
   .project-number {
     left: -30px;
     font-size: 3rem;
@@ -274,6 +299,11 @@ main {
 </head>
 <body>
 
+<!-- Custom Cursor -->
+<div class="cursor">
+  <span class="cursor-text"></span>
+</div>
+
 <canvas id="bg"></canvas>
 
 <main>
@@ -282,11 +312,10 @@ main {
 <h1>Projects</h1>
 
 <div class="links">
-<a href="index.html">home</a>
-<a href="experience.html">experience</a>
-<a href="https://github.com/" target="_blank">github</a>
-<a href="https://linkedin.com/" target="_blank">linkedin</a>
-<a href="mailto:acsaha@andrew.cmu.edu">email</a>
+<a href="index.html" data-cursor="home">home</a>
+<a href="experience.html" data-cursor="view">experience</a>
+<a href="https://github.com/" target="_blank" data-cursor="visit">github</a>
+<a href="https://linkedin.com/" target="_blank" data-cursor="visit">linkedin</a>
 </div>
 
 <p class="info">selected machine learning & data science projects</p>
@@ -303,7 +332,7 @@ main {
 <span class="project-year">2024</span>
 </div>
 <p class="project-desc">
-Developed an XGBoost model for predicting electric vehicle adoption across counties throughout the state of Florida.
+Developed an XGBoost model for predicting electric vehicle adoption for counties throughout the state of Florida.
 </p>
 <div class="tech-stack">
 <span class="tech-tag">XGBoost</span>
@@ -325,7 +354,7 @@ Developed an XGBoost model for predicting electric vehicle adoption across count
 <span class="project-year">2024</span>
 </div>
 <p class="project-desc">
-Developed an object-oriented 8-ball simulator program with an intelligent bot that optimized setting values for trajectory prediction and execution.
+Developed an object-oriented 8-ball simulator program with bot that optimized setting values for trajectory.
 </p>
 <div class="tech-stack">
 <span class="tech-tag">Python</span>
@@ -346,7 +375,7 @@ Developed an object-oriented 8-ball simulator program with an intelligent bot th
 <span class="project-year">2024</span>
 </div>
 <p class="project-desc">
-Utilized the UCI Machine Learning Repository to develop a logistic regression model for classifying malignant and benign tumors with high accuracy.
+Utilized the UCI Machine Learning Repository to form a logistic regression model for malignant and benign tumors.
 </p>
 <div class="tech-stack">
 <span class="tech-tag">Logistic Regression</span>
@@ -367,7 +396,7 @@ Utilized the UCI Machine Learning Repository to develop a logistic regression mo
 <span class="project-year">2024</span>
 </div>
 <p class="project-desc">
-Built a CNN model capable of identifying different dog breeds with transfer learning utilizing Inception V3 architecture.
+Built a CNN model capable of identifying different dog breeds with transfer learning utilizing Inception V3.
 </p>
 <div class="tech-stack">
 <span class="tech-tag">CNN</span>
@@ -389,7 +418,7 @@ Built a CNN model capable of identifying different dog breeds with transfer lear
 <span class="project-year">2023</span>
 </div>
 <p class="project-desc">
-Created a CNN-based classifier able to recognize differences between normal and cancerous lung tissue using softmax regression and one-hot encoding.
+Created a classifier with a CNN able to recognize differences between normal and cancerous lung tissue using softMax regression and one hot encoding.
 </p>
 <div class="tech-stack">
 <span class="tech-tag">CNN</span>
@@ -536,6 +565,67 @@ if (canvas) {
   });
 }
 
+// Custom Cursor with Magnetic Effect
+const cursor = document.querySelector('.cursor');
+const cursorText = document.querySelector('.cursor-text');
+let cursorX = 0;
+let cursorY = 0;
+let currentX = 0;
+let currentY = 0;
+
+document.addEventListener('mousemove', (e) => {
+  cursorX = e.clientX;
+  cursorY = e.clientY;
+});
+
+function animateCursor() {
+  const diffX = cursorX - currentX;
+  const diffY = cursorY - currentY;
+  
+  currentX += diffX * 0.15;
+  currentY += diffY * 0.15;
+  
+  cursor.style.left = currentX + 'px';
+  cursor.style.top = currentY + 'px';
+  
+  requestAnimationFrame(animateCursor);
+}
+
+animateCursor();
+
+// Magnetic effect on links
+const links = document.querySelectorAll('a');
+
+links.forEach(link => {
+  link.addEventListener('mouseenter', (e) => {
+    cursor.classList.add('hover');
+    const text = link.getAttribute('data-cursor');
+    if (text) {
+      cursorText.textContent = text;
+    }
+  });
+  
+  link.addEventListener('mouseleave', () => {
+    cursor.classList.remove('hover');
+    cursorText.textContent = '';
+  });
+  
+  link.addEventListener('mousemove', (e) => {
+    const rect = link.getBoundingClientRect();
+    const linkCenterX = rect.left + rect.width / 2;
+    const linkCenterY = rect.top + rect.height / 2;
+    
+    const deltaX = (e.clientX - linkCenterX) * 0.3;
+    const deltaY = (e.clientY - linkCenterY) * 0.3;
+    
+    link.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+  });
+  
+  link.addEventListener('mouseleave', () => {
+    link.style.transform = 'translate(0, 0)';
+  });
+});
+
 // Scroll Reveal Animation
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
@@ -557,7 +647,6 @@ let lastScroll = 0;
 
 window.addEventListener('scroll', () => {
   const scrolled = window.pageYOffset;
-  const delta = scrolled - lastScroll;
   
   document.querySelectorAll('.project-number').forEach((num, index) => {
     const card = num.closest('.project-card');
