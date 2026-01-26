@@ -206,8 +206,8 @@ main {
 }
 
 .exp-title {
-  font-size: 1.4rem;
-  font-weight: 500;
+  font-size: 1.1rem;
+  font-weight: 400;
   letter-spacing: -0.3px;
   color: #111;
   transition: color 0.3s ease;
@@ -229,9 +229,10 @@ main {
 }
 
 .exp-desc {
-  color: #555;
-  font-size: 0.95rem;
+  color: #666;
+  font-size: 0.9rem;
   line-height: 1.7;
+  font-weight: 400;
 }
 
 /* Skills Tags */
@@ -334,20 +335,11 @@ main {
 <div class="exp-content">
 <div class="exp-header">
 <h2 class="exp-title">Carnegie Mellon University</h2>
-<span class="exp-date">2022 – Present</span>
+<span class="exp-date">2025 – 2029</span>
 </div>
-<p class="exp-role">Student</p>
 <p class="exp-desc">
-Studying machine learning, data science, and artificial intelligence. Focused on building practical applications and conducting research in predictive modeling and deep learning.
+BSc Computer Science
 </p>
-<div class="skills">
-<span class="skill-tag">Python</span>
-<span class="skill-tag">Machine Learning</span>
-<span class="skill-tag">Deep Learning</span>
-<span class="skill-tag">Data Science</span>
-<span class="skill-tag">TensorFlow</span>
-<span class="skill-tag">PyTorch</span>
-</div>
 </div>
 </div>
 
@@ -514,22 +506,26 @@ function animateCursor() {
 
 animateCursor();
 
-// Magnetic effect and cursor text
+// Magnetic effect and cursor text (excluding nav links)
 const links = document.querySelectorAll('a');
 
 links.forEach(link => {
-  link.addEventListener('mouseenter', (e) => {
-    cursor.classList.add('hover');
-    const text = link.getAttribute('data-cursor');
-    if (text) {
-      cursorText.textContent = text;
-    }
-  });
+  const isNavLink = link.closest('.links');
   
-  link.addEventListener('mouseleave', () => {
-    cursor.classList.remove('hover');
-    cursorText.textContent = '';
-  });
+  if (!isNavLink) {
+    link.addEventListener('mouseenter', (e) => {
+      cursor.classList.add('hover');
+      const text = link.getAttribute('data-cursor');
+      if (text) {
+        cursorText.textContent = text;
+      }
+    });
+    
+    link.addEventListener('mouseleave', () => {
+      cursor.classList.remove('hover');
+      cursorText.textContent = '';
+    });
+  }
   
   link.addEventListener('mousemove', (e) => {
     const rect = link.getBoundingClientRect();
