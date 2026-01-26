@@ -25,10 +25,17 @@ if (!canvas) {
 
   const shapes = [];
 
+  // Define color palette - light blue, light green, light red
+  const colors = [
+    0x87CEEB, // Light blue
+    0x90EE90, // Light green
+    0xFFB6C1  // Light red/pink
+  ];
+
   // Helper function to create and add shapes
-  function addShape(geometry, opacityBase = 0.12) {
+  function addShape(geometry, opacityBase = 0.12, colorIndex = 0) {
     const material = new THREE.MeshBasicMaterial({
-      color: 0x000000,
+      color: colors[colorIndex % colors.length],
       wireframe: true,
       transparent: true,
       opacity: opacityBase + Math.random() * 0.08
@@ -100,30 +107,51 @@ if (!canvas) {
     const numInstances = 3 + Math.floor(Math.random() * 3); // 3-5 instances
     for (let i = 0; i < numInstances; i++) {
       const geometry = shapeTypes[index]();
-      addShape(geometry, index === 9 ? 0.1 : 0.12); // Lower opacity for torus knots
+      const colorIndex = Math.floor(Math.random() * colors.length);
+      addShape(geometry, index === 9 ? 0.1 : 0.12, colorIndex); // Lower opacity for torus knots
     }
   });
 
-  // Particles
+  // Particles - also colored
   const particleGeometry = new THREE.BufferGeometry();
   const particleCount = 2500;
   const positions = new Float32Array(particleCount * 3);
+  const particleColors = new Float32Array(particleCount * 3);
 
-  for (let i = 0; i < particleCount * 3; i++) {
-    positions[i] = (Math.random() - 0.5) * 220;
+  for (let i = 0; i < particleCount; i++) {
+    // Position
+    positions[i * 3] = (Math.random() - 0.5) * 220;
+    positions[i * 3 + 1] = (Math.random() - 0.5) * 220;
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 220;
+    
+    // Color - randomly choose from palette
+    const color = new THREE.Color(colors[Math.floor(Math.random() * colors.length)]);
+    particleColors[i * 3] = color.r;
+    particleColors[i * 3 + 1] = color.g;
+    particleColors[i * 3 + 2] = color.b;
   }
 
   particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  particleGeometry.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
 
   const particleMaterial = new THREE.PointsMaterial({
-    color: 0x000000,
     size: 0.15,
     transparent: true,
-    opacity: 0.2
+    opacity: 0.2,
+    vertexColors: true
   });
 
   const particles = new THREE.Points(particleGeometry, particleMaterial);
   scene.add(particles);
+
+  // Mouse parallax tracking
+  let mouseX = 0;
+  let mouseY = 0;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+    mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+  });
 
   // Animate
   function animate() {
@@ -139,6 +167,10 @@ if (!canvas) {
     // Slowly rotate particles
     particles.rotation.y += 0.0003;
     particles.rotation.x += 0.00015;
+
+    // Smooth parallax effect
+    camera.position.x += (mouseX * 5 - camera.position.x) * 0.05;
+    camera.position.y += (mouseY * 5 - camera.position.y) * 0.05;
 
     renderer.render(scene, camera);
   }
