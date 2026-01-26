@@ -25,17 +25,10 @@ if (!canvas) {
 
   const shapes = [];
 
-  // Define color palette - light blue, light green, light red
-  const colors = [
-    0x87CEEB, // Light blue
-    0x90EE90, // Light green
-    0xFFB6C1  // Light red/pink
-  ];
-
   // Helper function to create and add shapes
-  function addShape(geometry, opacityBase = 0.12, colorIndex = 0) {
+  function addShape(geometry, opacityBase = 0.12) {
     const material = new THREE.MeshBasicMaterial({
-      color: colors[colorIndex % colors.length],
+      color: 0xffffff, // Start with white, will be updated in animation
       wireframe: true,
       transparent: true,
       opacity: opacityBase + Math.random() * 0.08
@@ -57,7 +50,8 @@ if (!canvas) {
       mesh, 
       speedX: (Math.random() - 0.5) * 0.003, 
       speedY: (Math.random() - 0.5) * 0.002,
-      speedZ: (Math.random() - 0.5) * 0.0015
+      speedZ: (Math.random() - 0.5) * 0.0015,
+      hueOffset: Math.random() * 360 // Random starting hue for each shape
     });
   }
 
@@ -107,16 +101,16 @@ if (!canvas) {
     const numInstances = 3 + Math.floor(Math.random() * 3); // 3-5 instances
     for (let i = 0; i < numInstances; i++) {
       const geometry = shapeTypes[index]();
-      const colorIndex = Math.floor(Math.random() * colors.length);
-      addShape(geometry, index === 9 ? 0.1 : 0.12, colorIndex); // Lower opacity for torus knots
+      addShape(geometry, index === 9 ? 0.1 : 0.12); // Lower opacity for torus knots
     }
   });
 
-  // Particles - also colored
+  // Particles - also with color animation
   const particleGeometry = new THREE.BufferGeometry();
   const particleCount = 2500;
   const positions = new Float32Array(particleCount * 3);
   const particleColors = new Float32Array(particleCount * 3);
+  const particleHueOffsets = []; // Store hue offset for each particle
 
   for (let i = 0; i < particleCount; i++) {
     // Position
@@ -124,11 +118,13 @@ if (!canvas) {
     positions[i * 3 + 1] = (Math.random() - 0.5) * 220;
     positions[i * 3 + 2] = (Math.random() - 0.5) * 220;
     
-    // Color - randomly choose from palette
-    const color = new THREE.Color(colors[Math.floor(Math.random() * colors.length)]);
-    particleColors[i * 3] = color.r;
-    particleColors[i * 3 + 1] = color.g;
-    particleColors[i * 3 + 2] = color.b;
+    // Store random hue offset for this particle
+    particleHueOffsets.push(Math.random() * 360);
+    
+    // Initial color (will be updated in animation)
+    particleColors[i * 3] = 1;
+    particleColors[i * 3 + 1] = 1;
+    particleColors[i * 3 + 2] = 1;
   }
 
   particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -153,16 +149,43 @@ if (!canvas) {
     mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
   });
 
+  // Time variable for color cycling
+  let time = 0;
+
   // Animate
   function animate() {
     requestAnimationFrame(animate);
 
-    // Rotate all shapes
-    shapes.forEach(({ mesh, speedX, speedY, speedZ }) => {
+    time += 0.0005; // Slow color change speed
+
+    // Rotate all shapes and update colors
+    shapes.forEach(({ mesh, speedX, speedY, speedZ, hueOffset }) => {
       mesh.rotation.x += speedX;
       mesh.rotation.y += speedY;
       mesh.rotation.z += speedZ;
+      
+      // Calculate hue that cycles through the spectrum
+      const hue = (time * 50 + hueOffset) % 360;
+      
+      // Convert HSL to RGB for a smooth color transition
+      // Using pastel/light colors (high lightness)
+      const color = new THREE.Color();
+      color.setHSL(hue / 360, 0.6, 0.75); // saturation 0.6, lightness 0.75 for soft colors
+      mesh.material.color = color;
     });
+
+    // Update particle colors
+    const colors = particleGeometry.attributes.color.array;
+    for (let i = 0; i < particleCount; i++) {
+      const hue = (time * 50 + particleHueOffsets[i]) % 360;
+      const color = new THREE.Color();
+      color.setHSL(hue / 360, 0.6, 0.75);
+      
+      colors[i * 3] = color.r;
+      colors[i * 3 + 1] = color.g;
+      colors[i * 3 + 2] = color.b;
+    }
+    particleGeometry.attributes.color.needsUpdate = true;
 
     // Slowly rotate particles
     particles.rotation.y += 0.0003;
